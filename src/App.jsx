@@ -1,5 +1,52 @@
 import { useState, useEffect } from "react";
 
+const SENHA_CORRETA = "me2026";
+
+function TelaSenha({ onEntrar }) {
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState(false);
+
+  const tentar = () => {
+    if (senha === SENHA_CORRETA) {
+      onEntrar();
+    } else {
+      setErro(true);
+      setSenha("");
+      setTimeout(() => setErro(false), 2000);
+    }
+  };
+
+  return (
+    <div style={{ minHeight:"100vh", background:"#F4EFE7", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"2rem", fontFamily:"Georgia,serif" }}>
+      <div style={{ maxWidth:380, width:"100%", textAlign:"center" }}>
+        <svg width="160" height="40" viewBox="0 0 230 40" fill="none" style={{ marginBottom:"0.5rem" }}>
+          <text x="0" y="35" fontFamily="Georgia,serif" fontSize="40" fontWeight="bold" fill="#444C3E" letterSpacing="-2">ME</text>
+          <line x1="82" y1="5" x2="82" y2="37" stroke="#AC6A37" strokeWidth="1.5"/>
+          <text x="89" y="18" fontFamily="Georgia,serif" fontSize="12.5" fill="#AC6A37">Conteúdos</text>
+          <text x="89" y="34" fontFamily="Georgia,serif" fontSize="12.5" fill="#AC6A37">&amp; Estratégias</text>
+        </svg>
+        <div style={{ width:40, height:2, background:"#AC6A37", margin:"1rem auto 2rem" }}/>
+        <p style={{ color:"#784024", fontSize:"0.95rem", marginBottom:"2rem", lineHeight:1.7 }}>
+          Área exclusiva para clientes.<br/>Digite a senha para acessar.
+        </p>
+        <input
+          type="password"
+          value={senha}
+          onChange={e => setSenha(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && tentar()}
+          placeholder="Digite a senha..."
+          style={{ width:"100%", background:"#fff", border:`1.5px solid ${erro ? "#784024" : "#EAE2D6"}`, borderRadius:"12px", padding:"1rem", color:"#342C1E", fontSize:"1rem", outline:"none", boxSizing:"border-box", fontFamily:"Georgia,serif", textAlign:"center", marginBottom:"0.8rem", transition:"border 0.2s" }}
+        />
+        {erro && <p style={{ color:"#784024", fontSize:"0.85rem", marginBottom:"0.8rem" }}>Senha incorreta. Tente novamente.</p>}
+        <button onClick={tentar}
+          style={{ background:"#444C3E", color:"#F4EFE7", border:"none", padding:"1rem", borderRadius:"50px", fontSize:"1rem", fontWeight:"bold", cursor:"pointer", width:"100%", boxShadow:"0 6px 24px #444C3E44" }}>
+          Entrar →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 const C = {
   creme: "#F4EFE7",
   cremeEscuro: "#EAE2D6",
@@ -201,6 +248,10 @@ function BreathingExercise({ onDone }) {
 
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
+  const [liberado, setLiberado] = useState(() => { try { return sessionStorage.getItem("me_acesso") === "ok"; } catch { return false; } });
+
+  if (!liberado) return <TelaSenha onEntrar={() => { try { sessionStorage.setItem("me_acesso","ok"); } catch {} setLiberado(true); }} />;
+
   const [screen,      setScreen]      = useState(SCREENS.HOME);
   const [selectedFear,setSelectedFear]= useState(null);
   const [selectedObj, setSelectedObj] = useState(null);
