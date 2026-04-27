@@ -249,9 +249,6 @@ function BreathingExercise({ onDone }) {
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [liberado, setLiberado] = useState(() => { try { return sessionStorage.getItem("me_acesso") === "ok"; } catch { return false; } });
-
-  if (!liberado) return <TelaSenha onEntrar={() => { try { sessionStorage.setItem("me_acesso","ok"); } catch {} setLiberado(true); }} />;
-
   const [screen,      setScreen]      = useState(SCREENS.HOME);
   const [selectedFear,setSelectedFear]= useState(null);
   const [selectedObj, setSelectedObj] = useState(null);
@@ -260,6 +257,8 @@ export default function App() {
   const [script,      setScript]      = useState("");
   const [loading,     setLoading]     = useState(false);
   const [apiError,    setApiError]    = useState(false);
+
+  if (!liberado) return <TelaSenha onEntrar={() => { try { sessionStorage.setItem("me_acesso","ok"); } catch {} setLiberado(true); }} />;
 
   const preps = selectedObj ? PREPS[selectedObj] : [];
   const objInfo = objectives.find(o => o.id === selectedObj);
