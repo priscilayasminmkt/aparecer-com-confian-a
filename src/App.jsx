@@ -331,9 +331,9 @@ export default function App() {
     setScreen(SCREENS.SCRIPT);
     const prompt = buildPrompt(selectedObj, answers, aberturaOpt || opcaoAbertura);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/roteiro", {
         method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:1000, messages:[{ role:"user", content:prompt }] }),
+        body: JSON.stringify({ prompt }),
       });
       if (!res.ok) throw new Error("API error");
       const data = await res.json();
